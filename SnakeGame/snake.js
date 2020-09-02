@@ -4,15 +4,22 @@ function init(){
     W=canvas.width=1000;
     H=canvas.height=1000;
     pen=canvas.getContext('2d');
-    cs=66;
+    cellSize=66;
     food=getRandomFood();
-    gameOver=false
+    gameOver=false;
+    score=6;
+
+    food_img=new Image();
+    food_img.src="Images/apple.png";
+
+    trophy_img=new Image();
+    trophy_img.src="Images/trophy.png";
     
 
 
     snake={
         init_len:6,
-        color:"blue",
+        color:"aqua",
         cells:[],
         direction:"right",
 
@@ -25,7 +32,7 @@ function init(){
         drawSnake:function(){
             pen.fillStyle=this.color;
             for(var i=0;i<this.cells.length;i++){
-            pen.fillRect(this.cells[i].x*cs,this.cells[i].y*cs,cs-2,cs-2)
+            pen.fillRect(this.cells[i].x*cellSize,this.cells[i].y*cellSize,cellSize-2,cellSize-2)
             }
         },
 
@@ -38,6 +45,7 @@ function init(){
             {
                 console.log("food eaten")
                 food=getRandomFood();
+                score++;
             }
             else{
                 this.cells.pop()
@@ -71,8 +79,8 @@ function init(){
          
             this.cells.unshift({x:nextX,y:nextY});
 
-            var last_X=Math.round(W/cs);
-            var last_Y=Math.round(H/cs);
+            var last_X=Math.round(W/cellSize);
+            var last_Y=Math.round(H/cellSize);
 
             if(this.cells[0].y<0 || this.cells[0].x<0 || this.cells[0].y>last_Y || this.cells[0].x>last_X){
                 gameOver=true
@@ -111,7 +119,12 @@ function draw(){
     snake.drawSnake();
 
     pen.fillStyle=food.color;
-    pen.fillRect(food.x*cs,food.y*cs,cs,cs)
+    pen.drawImage(food_img,food.x*cellSize,food.y*cellSize,cellSize,cellSize);
+
+    pen.drawImage(trophy_img,20,20,cellSize,cellSize)
+    pen.font="30px Roboto"
+    pen.fillStyle="blue";
+    pen.fillText(score,50,50)
 
 }
 
@@ -120,8 +133,8 @@ function update(){
 }
 
 function getRandomFood(){
-    var foodX=Math.round(Math.random()*(W-cs)/cs);
-    var foodY=Math.round(Math.random()*(H-cs)/cs);
+    var foodX=Math.round(Math.random()*(W-cellSize)/cellSize);
+    var foodY=Math.round(Math.random()*(H-cellSize)/cellSize);
     var food={
         x:foodX,
         y:foodY,
@@ -134,8 +147,14 @@ function gameLoop(){
 
     if(gameOver==true)
     {
-        clearInterval(f) 
         alert("game over")
+        clearInterval(f) 
+        
+        init();
+        gameOver=false
+        startGame();
+        
+
     }
     draw();
     update();
@@ -143,5 +162,10 @@ function gameLoop(){
 }
 
 init();
-var f=setInterval(gameLoop,100);
+gameOver=false
+startGame();
+function startGame(){
+     f=setInterval(gameLoop,100);
+}
+
 
