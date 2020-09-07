@@ -49,13 +49,61 @@ function create(){
     this.wheel.setScale(0.25)
     console.log(this.wheel)
 
+    //event listener
+    this.input.on("pointerdown",spinwheel,this);
+
+    font_text={
+        font:"bold 50px Roboto",
+        align:"center",
+        color:"red",
+
+    }
+
+    this.game_text=this.add.text(10,10,"Welcome to Spin and Win",font_text)
+
 
 
 }
 
 function update(){
 
-    
-
+   
+       
+ //Alpha is used to make object invisible    
+  //this.wheel.alpha -=.01
     console.log("Inside Update")
+}
+
+function spinwheel(){
+
+    
+   // this.wheel.angle +=4  
+
+    let rounds=Phaser.Math.Between(2,4);
+     degrees=Phaser.Math.Between(0,11)*30;
+    let total_angle=rounds*360 + degrees;
+
+    let prize=["CB Book"," CB TShirt","2 Extra Spins","Amazon Voucher","50% Off",
+                "NetFlix","100% Off","SwagPack","70% Off","Hard Luck",
+                "35% Off", "3000 Credits"
+                ];
+
+    tween=this.tweens.add({
+        
+        targets:this.wheel,
+        angle:total_angle,
+        ease:"Cubic.easeOut",
+        // scaleX:0.3,
+        // scaleY:0.3,
+        duration:5000,
+        callbackScope:this,
+        onComplete:function(){
+            this.game_text.setText("You Won "+prize[(degrees/30)])
+
+        }
+      
+    
+    });
+  
+
 }
